@@ -86,43 +86,55 @@ Container blackIconMenu(VoidCallback changeIndex) {
 
 Container invisibleSubMenus() {
   return Container(
-    width: 150,
-    color: Colors.pink,
+    width: 125,
+    color: Color(0xffe3e9f7),
     child: ListView.builder(
       itemCount: cdms.length,
       itemBuilder: (ctx, index) {
         CDM cdm = cdms[index];
-        bool selected = currentCattegory == index;
-        if (selected) {
-          return subMenuWidget(cdm.title, cdm.submenus);
-        }
-        return invisibleSubMenuWidget();
+        bool isValidSubMenu =
+            (currentCattegory == index) && cdm.submenus.isNotEmpty;
+        return subMenuWidget([cdm.title]..addAll(cdm.submenus), isValidSubMenu);
       },
     ),
   );
 }
 
-Widget subMenuWidget(String title, List<String> submenus) {
-  return Container(
-    color: Color(0xff1d1b31),
-    height: 100,
+Widget subMenuWidget(List<String> submenus, bool isValidSubMenu) {
+  return AnimatedContainer(
+    duration: Duration(milliseconds: 400),
+    height: isValidSubMenu ? 200 : 45,
+    alignment: Alignment.center,
+    decoration: BoxDecoration(
+      color: isValidSubMenu ? Color(0xff1d1b31) : Colors.transparent,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(8),
+        bottomRight: Radius.circular(8),
+      ),
+    ),
     child: ListView.builder(
-      itemCount: submenus.length,
+      padding: const EdgeInsets.all(6),
+      itemCount: isValidSubMenu ? submenus.length : 0,
       itemBuilder: (ctx, index) {
         String subMenu = submenus[index];
-        return Text(
-          subMenu,
-          style: TextStyle(color: Colors.blueGrey),
+        return InkWell(
+          onTap: () {
+            //TODO handle the function
+            //TODO index== 0 ? doNothing : doLogic
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              subMenu,
+              style: TextStyle(
+                  fontSize: index == 0 ? 17 : 14,
+                  color: index == 0 ? Colors.white : Colors.grey,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
         );
       },
     ),
-  );
-}
-
-Widget invisibleSubMenuWidget() {
-  return Container(
-    height: 45,
-    color: Colors.green,
   );
 }
 
