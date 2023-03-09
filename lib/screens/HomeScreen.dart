@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 
-import 'ComplexDrawer.dart';
-import 'MyColors.dart';
+import '../widgets/ComplexDrawer.dart';
+import '../models/MyColors.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context),
-      body: body(),
+      body: body(context),
       drawer: ComplexDrawer(),
       drawerScrimColor: Colors.transparent,
-      backgroundColor: MyColors.compexDrawerCanvasColor,
+      backgroundColor: Theme.of(context).canvasColor,
     );
     ;
   }
@@ -29,21 +29,21 @@ class _HomePageState extends State<HomePage> {
 AppBar appBar(BuildContext context) {
   return AppBar(
     iconTheme: IconTheme.of(context).copyWith(
-      color: MyColors.complexDrawerBlack,
+      color: Theme.of(context).primaryColor,
     ),
     title: Text(
       "Dorm Gym",
       style: TextStyle(color: MyColors.complexDrawerBlack),
     ),
-    backgroundColor: MyColors.compexDrawerCanvasColor,
+    backgroundColor: Theme.of(context).canvasColor,
   );
 }
 
-Widget body() {
+Widget body(BuildContext context) {
   return Center(
     child: Container(
       foregroundDecoration: BoxDecoration(
-        color: MyColors.complexDrawerBlack,
+        color: Theme.of(context).canvasColor,
         backgroundBlendMode: BlendMode.saturation,
       ),
       child: FlutterLogo(

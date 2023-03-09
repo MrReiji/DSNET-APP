@@ -1,7 +1,9 @@
-import 'package:dorm_gym/ComplexDrawer.dart';
-import 'package:dorm_gym/GymScreen.dart';
-import 'package:dorm_gym/HomePage.dart';
+import 'package:dorm_gym/widgets/ComplexDrawer.dart';
+import 'package:dorm_gym/screens/GymScreen.dart';
+import 'package:dorm_gym/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
+
+import 'models/MyColors.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,15 +16,18 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Dorm Gym',
         theme: ThemeData(
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            unselectedWidgetColor: Colors.white),
-        home: HomePage(),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          unselectedWidgetColor: Colors.white,
+          primaryColor: MyColors.complexDrawerBlack,
+          canvasColor: MyColors.complexDrawerCanvasColor,
+        ),
+        home: HomeScreen(),
         routes: {
           GymScreen.routeName: (ctx) => GymScreen(),
         },
         onUnknownRoute: (settings) {
           return MaterialPageRoute(
-            builder: (ctx) => HomePage(),
+            builder: (ctx) => HomeScreen(),
           );
         });
   }

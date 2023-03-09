@@ -6,6 +6,7 @@ import '../../models/ComplexDrawerElement.dart';
 
 import '../cdms.dart';
 import '../models/MyColors.dart';
+import '../screens/HomeScreen.dart';
 
 class ComplexDrawer extends StatefulWidget {
   const ComplexDrawer({Key? key}) : super(key: key);
@@ -17,8 +18,13 @@ class ComplexDrawer extends StatefulWidget {
 class _ComplexDrawerState extends State<ComplexDrawer> {
   int selectedIndex = -1; //dont set it to 0
 
-  void selectCategory(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(GymScreen.routeName);
+  void selectCategory(
+      BuildContext context, String routeName, String screenTitle) {
+    Navigator.of(context).pushNamed(routeName, arguments: screenTitle);
+  }
+
+  void returnToHomeScreen(BuildContext context) {
+    Navigator.popUntil(context, ModalRoute.withName('/'));
   }
 
   @override
@@ -27,7 +33,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     return Container(
       width: width,
       child: drawerMenu(),
-      color: MyColors.compexDrawerCanvasColor,
+      color: MyColors.complexDrawerCanvasColor,
     );
   }
 
@@ -54,6 +60,8 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         onTap: () {
                           setState(() {
                             selectedIndex = selected ? index : -1;
+                            selectCategory(
+                                context, GymScreen.routeName, cdm.title);
                           });
                         },
                       )
@@ -100,6 +108,11 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        onTap: () {
+          setState(() {
+            returnToHomeScreen(context);
+          });
+        },
       ),
     );
   }
@@ -107,7 +120,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
   Widget sMenuButton(String subMenu) {
     return InkWell(
       onTap: () {
-        selectCategory(context);
+        selectCategory(context, GymScreen.routeName, subMenu);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
