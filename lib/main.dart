@@ -1,6 +1,7 @@
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:dorm_gym/screens/GymScreen.dart';
 import 'package:dorm_gym/screens/HomeScreen.dart';
+import 'package:dorm_gym/screens/LoginScreen.dart';
 import 'package:flutter/material.dart';
 
 import 'models/MyColors.dart';
@@ -21,8 +22,9 @@ class MyApp extends StatelessWidget {
           primaryColor: MyColors.complexDrawerBlack,
           canvasColor: MyColors.complexDrawerCanvasColor,
         ),
-        home: HomeScreen(),
+        home: LoginScreen(),
         routes: {
+          HomeScreen.routeName: (ctx) => HomeScreen(),
           GymScreen.routeName: (ctx) => GymScreen(),
         },
         onUnknownRoute: (settings) {

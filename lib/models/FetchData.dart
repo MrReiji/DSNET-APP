@@ -9,7 +9,7 @@ class FetchData {
         Uri.parse("https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889");
     try {
       final response = await http.get(url);
-      print(response.body is String ? response.body : "");
+      print(response.body);
     } catch (error) {
       throw (error);
     }
