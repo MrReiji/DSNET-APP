@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         },
         onUnknownRoute: (settings) {
           return MaterialPageRoute(
-            builder: (ctx) => HomeScreen(),
+            builder: (ctx) => LoginScreen(),
           );
         });
   }

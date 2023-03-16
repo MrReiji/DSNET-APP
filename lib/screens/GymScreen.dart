@@ -1,4 +1,4 @@
-import 'package:dorm_gym/models/FetchData.dart';
+import 'package:dorm_gym/models/ConnectionHandler.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +36,7 @@ class _GymScreenState extends State<GymScreen> {
         child: IconButton(
           icon: Icon(Icons.yard),
           onPressed: () {
-            FetchData.fetchData();
+            ConnectionHandler.getData();
           },
         ),
       )),

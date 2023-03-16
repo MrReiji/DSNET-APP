@@ -1,4 +1,4 @@
-import 'package:dorm_gym/models/FetchData.dart';
+import 'package:dorm_gym/models/ConnectionHandler.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +14,10 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController _emailController = TextEditingController();
+    TextEditingController _passwordController = TextEditingController();
+    Map<String, String> data;
+
     return Scaffold(
       backgroundColor: Theme.of(context).canvasColor,
       body: SingleChildScrollView(
@@ -25,30 +29,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                     width: 200,
                     height: 150,
-                    // decoration: BoxDecoration(
-                    //     color: Theme.of(context).primaryColor,
-                    //     borderRadius: BorderRadius.circular(50.0)),
                     child: Image.asset(
                       "dsnet-logo-small.png",
                       fit: BoxFit.contain,
                     )),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: TextField(
-                decoration: InputDecoration(
+                controller: _emailController,
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Email',
                     hintText: 'Enter valid email id as abc@gmail.com'),
               ),
             ),
-            const Padding(
+            Padding(
               padding:
                   EdgeInsets.only(left: 25.0, right: 25.0, top: 10, bottom: 10),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Password',
                     hintText: 'Enter secure password'),
@@ -73,7 +76,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.blue, borderRadius: BorderRadius.circular(20)),
               child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(HomeScreen.routeName);
+                  data = {
+                    '_username': _emailController.text,
+                    '_password': _passwordController.text,
+                  };
+                  ConnectionHandler.postData(data).then((succes) {
+                    if (succes) {
+                      print("Logged in!");
+                      Navigator.of(context).pushNamed(HomeScreen.routeName);
+                    } else {
+                      print("Not logged in. Something's wrong!");
+                    }
+                  });
                 },
                 child: const Text(
                   'Login',
@@ -84,7 +98,21 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 130,
             ),
-            Text('New User? Create Account')
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'New User?',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Create Account',
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
