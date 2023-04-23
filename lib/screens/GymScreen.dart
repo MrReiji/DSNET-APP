@@ -36,7 +36,8 @@ class _GymScreenState extends State<GymScreen> {
         child: IconButton(
           icon: Icon(Icons.yard),
           onPressed: () {
-            ConnectionHandler.getData();
+            ConnectionHandler.getData(
+                "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889");
           },
         ),
       )),

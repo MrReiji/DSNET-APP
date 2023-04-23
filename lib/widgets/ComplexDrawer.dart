@@ -98,7 +98,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
         leading: Container(
           height: 40,
           width: 40,
-          child: Image.asset("dsnet-logo-small.png"),
+          child: Image.asset("assets\\images\\dsnet-logo-small.png"),
         ),
         title: Text(
           "DSNET Panel",

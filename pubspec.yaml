@@ -41,6 +41,11 @@ dependencies:
   dio_logging_interceptor: ^1.0.1
   dio_cookie_manager: ^2.0.0
   cookie_jar: ^3.0.1
+  requests: ^4.8.0-alpha.0
+  oauth2: ^2.0.1
+  url_launcher: ^6.1.10
+  uni_links: ^0.5.1
+
 
 dev_dependencies:
   flutter_test:
@@ -66,9 +71,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-            - assets/images/dsnet-logo-small.png
-            - assets/dsnet-logo-small.png
-  #   - images/a_dot_ham.jpeg
+    - assets\images\dsnet-logo-small.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

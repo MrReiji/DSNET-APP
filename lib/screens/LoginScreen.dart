@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 200,
                     height: 150,
                     child: Image.asset(
-                      "dsnet-logo-small.png",
+                      "assets\\images\\dsnet-logo-small.png",
                       fit: BoxFit.contain,
                     )),
               ),
@@ -83,6 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ConnectionHandler.postData(data).then((succes) {
                     if (succes) {
                       print("Logged in!");
+                      _emailController.text = "";
+                      _passwordController.text = "";
                       Navigator.of(context).pushNamed(HomeScreen.routeName);
                     } else {
                       print("Not logged in. Something's wrong!");
