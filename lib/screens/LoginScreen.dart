@@ -83,10 +83,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ConnectionHandler.postData(data).then((succes) {
                     if (succes) {
                       print("Logged in!");
-                      _emailController.text = "";
-                      _passwordController.text = "";
+                      // _emailController.text = "";
+                      // _passwordController.text = "";
                       Navigator.of(context).pushNamed(HomeScreen.routeName);
                     } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Login Error"),
+                              content: Text(
+                                  "You have entered the wrong login or password. Please correct them to log in correctly."),
+                              actions: [
+                                TextButton(
+                                  child: Text("Ok"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
                       print("Not logged in. Something's wrong!");
                     }
                   });

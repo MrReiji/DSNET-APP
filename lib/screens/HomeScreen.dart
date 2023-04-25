@@ -34,7 +34,7 @@ AppBar appBar(BuildContext context) {
       color: Theme.of(context).primaryColor,
     ),
     title: Text(
-      "Dorm Gym",
+      "DSNET Panel",
       style: TextStyle(color: MyColors.complexDrawerBlack),
     ),
     backgroundColor: Theme.of(context).canvasColor,
@@ -42,15 +42,63 @@ AppBar appBar(BuildContext context) {
 }
 
 Widget body(BuildContext context) {
-  return Center(
-    child: Container(
-      foregroundDecoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
-        backgroundBlendMode: BlendMode.saturation,
+  return GridView.count(
+    primary: false,
+    padding: const EdgeInsets.all(10),
+    crossAxisSpacing: 5,
+    mainAxisSpacing: 5,
+    crossAxisCount: 2,
+    children: <Widget>[
+      Card(
+        color: Colors.amber,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: InkResponse(
+          highlightShape: BoxShape.rectangle,
+          containedInkWell: true,
+          splashColor: Colors.amberAccent,
+          onTap: () {},
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.fitness_center, size: 100),
+                SizedBox(height: 10),
+                Text(
+                  "Gym",
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
-      child: FlutterLogo(
-        size: 150,
+      Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.teal[200],
+        child: const Text('Heed not the rabble'),
       ),
-    ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.teal[300],
+        child: const Text('Sound of screams but the'),
+      ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.teal[400],
+        child: const Text('Who scream'),
+      ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.teal[500],
+        child: const Text('Revolution is coming...'),
+      ),
+      Container(
+        padding: const EdgeInsets.all(8),
+        color: Colors.teal[600],
+        child: const Text('Revolution, they...'),
+      ),
+    ],
   );
 }
