@@ -1,9 +1,10 @@
+import 'package:dorm_gym/screens/GymScreen.dart';
+import 'package:dorm_gym/widgets/HomeScreenCard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../widgets/ComplexDrawer.dart';
 import '../models/MyColors.dart';
+import '../cdms.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,63 +43,16 @@ AppBar appBar(BuildContext context) {
 }
 
 Widget body(BuildContext context) {
-  return GridView.count(
-    primary: false,
-    padding: const EdgeInsets.all(10),
-    crossAxisSpacing: 5,
-    mainAxisSpacing: 5,
-    crossAxisCount: 2,
-    children: <Widget>[
-      Card(
-        color: Colors.amber,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: InkResponse(
-          highlightShape: BoxShape.rectangle,
-          containedInkWell: true,
-          splashColor: Colors.amberAccent,
-          onTap: () {},
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.fitness_center, size: 100),
-                SizedBox(height: 10),
-                Text(
-                  "Gym",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+  return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
       ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        color: Colors.teal[200],
-        child: const Text('Heed not the rabble'),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        color: Colors.teal[300],
-        child: const Text('Sound of screams but the'),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        color: Colors.teal[400],
-        child: const Text('Who scream'),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        color: Colors.teal[500],
-        child: const Text('Revolution is coming...'),
-      ),
-      Container(
-        padding: const EdgeInsets.all(8),
-        color: Colors.teal[600],
-        child: const Text('Revolution, they...'),
-      ),
-    ],
-  );
+      itemCount: cdms.length,
+      itemBuilder: (BuildContext context, int index) {
+        return HSCard(
+          icon: cdms[index].icon,
+          cardTitle: cdms[index].title,
+          routeName: GymScreen.routeName,
+        );
+      });
 }

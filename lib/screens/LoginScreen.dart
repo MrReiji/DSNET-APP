@@ -80,13 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     '_username': _emailController.text,
                     '_password': _passwordController.text,
                   };
-                  ConnectionHandler.postData(data).then((succes) {
+                  ConnectionHandler.postData(data, context).then((succes) {
                     if (succes) {
                       print("Logged in!");
                       // _emailController.text = "";
                       // _passwordController.text = "";
                       Navigator.of(context).pushNamed(HomeScreen.routeName);
                     } else {
+                      Navigator.pop(context);
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
