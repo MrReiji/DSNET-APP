@@ -144,7 +144,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
             color: Colors.white70,
             image: DecorationImage(
               image: NetworkImage(
-                  "https://cdn.pixabay.com/photo/2016/03/29/03/14/portrait-1287421_960_720.jpg"),
+                  "https://icon-library.com/images/default-profile-icon/default-profile-icon-24.jpg"),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.circular(6),

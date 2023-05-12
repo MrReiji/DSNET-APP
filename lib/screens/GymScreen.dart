@@ -1,59 +1,13 @@
 import 'package:dorm_gym/models/ConnectionHandler.dart';
+import 'package:dorm_gym/models/DataHandler.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
-import 'package:dorm_gym/widgets/GymScreenWidgets/GS_Slot.dart';
 import 'package:dorm_gym/widgets/GymScreenWidgets/GS_TableHeader.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/GymScreenWidgets/GS_ReservationButton.dart';
 
-List<String> resInfo = [];
-
 class GymScreen extends StatefulWidget {
-  GymScreen({super.key}) {
-    ConnectionHandler.getData(
-            "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889")
-        .then(
-      (document) {
-        var content = document
-            .querySelector('.table.reservation.general.table-sm.single')!
-            .children;
-        var resContent = content[1].text.trim().split('\n');
-        //print(resContent);
-        //[2].trim().split(' ');
-        List<String> resContElems;
-        List<String> separated;
-
-        for (String resContElem in resContent) {
-          resContElems = resContElem.trim().split(' ');
-          //print(resContElems);
-          resContElems.removeWhere((element) => element == '');
-          resContElems[resContElems.length - 1] =
-              resContElems[resContElems.length - 1].replaceAllMapped(
-                  RegExp(r'([a-zA-Z])(\d)'),
-                  (match) => '${match.group(1)} ${match.group(2)}');
-          separated = resContElems[resContElems.length - 1].split(" ");
-          resContElems.removeLast();
-          resContElems.add(separated[0]);
-          if (resContElems.length == 1) {
-            resInfo.add(separated[0]);
-          }
-          if (resContElems.length == 4) {
-            resInfo.add(resContElems[0] + " " + resContElems[1]);
-            resInfo.add(resContElems[2] + " " + resContElems[3]);
-          } else if ((resContElems.length == 3)) {
-            resInfo.add(resContElems[0]);
-            resInfo.add(resContElems[1] + " " + resContElems[2]);
-          }
-          if (separated.length > 1) {
-            resInfo.add(separated[1]);
-          }
-        }
-        print(resInfo);
-
-        //lista = resContent;
-      },
-    );
-  }
+  GymScreen({super.key});
 
   static const routeName = '/gym';
 
@@ -62,11 +16,25 @@ class GymScreen extends StatefulWidget {
 }
 
 class _GymScreenState extends State<GymScreen> {
+  _GymScreenState();
+
+  late Future<List<String>> _reservationInfo;
+
+  @override
+  void initState() {
+    _reservationInfo = getReservationsInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenName = ModalRoute.of(context)!.settings.arguments as String;
     const double _height = 40;
 
+    // print(_reservationInfo.length);
+    // if (_reservationInfo.isEmpty) {
+    //   print("Bylo tutaj");
+    //   setState(() {});
+    // }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).canvasColor,
@@ -105,9 +73,24 @@ class _GymScreenState extends State<GymScreen> {
                           height: _height,
                           color: Colors.grey.shade200,
                           child: Center(
-                            child: Text(
-                              '${resInfo[0 + index * 4]}\n${resInfo[1 + index * 4]}',
-                              textAlign: TextAlign.center,
+                            child: FutureBuilder<List<String>>(
+                              future: _reservationInfo, // async work
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<String>> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.waiting:
+                                    return Text('Loading....');
+                                  default:
+                                    if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      return Text(
+                                        '${snapshot.data![0 + index * 4]}\n${snapshot.data![1 + index * 4]}',
+                                        textAlign: TextAlign.center,
+                                      );
+                                    }
+                                }
+                              },
                             ),
                           ),
                         ),
