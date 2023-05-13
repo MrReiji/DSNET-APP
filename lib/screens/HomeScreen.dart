@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: body(context),
       drawer: ComplexDrawer(),
       drawerScrimColor: Colors.transparent,
-      backgroundColor: Theme.of(context).canvasColor,
+      backgroundColor: Colors.grey.shade200,
     );
     ;
   }

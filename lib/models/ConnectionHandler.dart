@@ -67,26 +67,6 @@ class ConnectionHandler {
           .querySelector('#tour_welcome')!
           .text
           .contains("Witaj");
-      // } on DioError {
-      //   showDialog(
-      //       barrierDismissible: false,
-      //       context: context,
-      //       builder: (BuildContext context) {
-      //         return AlertDialog(
-      //           title: Text("Connection error"),
-      //           content: Text(
-      //               "An error occurred while sending your request. Please try again."),
-      //           actions: [
-      //             TextButton(
-      //               child: Text("Ok"),
-      //               onPressed: () {
-      //                 Navigator.of(context).pop();
-      //               },
-      //             )
-      //           ],
-      //         );
-      //       });
-      //   return false;
     } catch (error) {
       return false;
     }

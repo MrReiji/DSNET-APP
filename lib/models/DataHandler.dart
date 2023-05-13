@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:html/dom.dart';
+import 'package:html/dom.dart' hide Text;
 
 import 'ConnectionHandler.dart';
 
@@ -35,16 +35,15 @@ Future<List<String>> getReservationsInfo() async {
 
       if (slotContentElemParts.length == 1) {
         reservationInfo.add(separated[0]);
-      }
-      if (slotContentElemParts.length == 4) {
+      } else if (slotContentElemParts.length == 4) {
         reservationInfo
             .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
         reservationInfo
             .add(slotContentElemParts[2] + " " + slotContentElemParts[3]);
-      } else if ((slotContentElemParts.length == 3)) {
-        reservationInfo.add(slotContentElemParts[0]);
+      } else if (slotContentElemParts.length == 3) {
         reservationInfo
-            .add(slotContentElemParts[1] + " " + slotContentElemParts[2]);
+            .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
+        reservationInfo.add(slotContentElemParts[2]);
       }
       if (separated.length > 1) {
         reservationInfo.add(separated[1]);

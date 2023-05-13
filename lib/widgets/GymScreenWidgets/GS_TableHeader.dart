@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class GS_TableHeader extends StatelessWidget {
   const GS_TableHeader({super.key});
-  final double _height = 30.0;
 
   @override
   Widget build(BuildContext context) {
+    final double _height = MediaQuery.of(context).size.height / 26;
+
     return Table(
       border: TableBorder.all(color: Colors.green.shade100),
       columnWidths: <int, TableColumnWidth>{
