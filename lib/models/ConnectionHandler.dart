@@ -39,9 +39,9 @@ class ConnectionHandler {
     }
   }
 
-  static Future<bool> postData(
+  static Future<bool> loginFunction(
       Map<String, String> data, BuildContext context) async {
-    const url = "https://panel.dsnet.agh.edu.pl/login_check";
+    const String url = "https://panel.dsnet.agh.edu.pl/login_check";
     try {
       showLoaderDialog(context);
 
@@ -59,6 +59,7 @@ class ConnectionHandler {
           ));
 
       cookie = response.headers['set-cookie']![0].split(';')[0];
+      //print(cookie);
 
       dom.Document mainPageLoggedIn =
           await getData("https://panel.dsnet.agh.edu.pl");
@@ -70,5 +71,18 @@ class ConnectionHandler {
     } catch (error) {
       return false;
     }
+  }
+
+  static Future<void> makeReservation(String url) async {
+    final String _url = url;
+
+    final response = await dio.post(url,
+        data: {'form': 'single'},
+        options: Options(
+          headers: {
+            'cookie': cookie,
+          },
+        ));
+    //print(response);
   }
 }

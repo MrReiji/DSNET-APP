@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     '_username': _emailController.text,
                     '_password': _passwordController.text,
                   };
-                  ConnectionHandler.postData(data, context).then((succes) {
+                  ConnectionHandler.loginFunction(data, context).then((succes) {
                     if (succes) {
                       print("Logged in!");
                       // _emailController.text = "";

@@ -1,3 +1,4 @@
+import 'package:dorm_gym/screens/LandryScreen.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:dorm_gym/screens/GymScreen.dart';
 import 'package:dorm_gym/screens/HomeScreen.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeScreen.routeName: (ctx) => HomeScreen(),
           GymScreen.routeName: (ctx) => GymScreen(),
+          LaundryScreen.routeName: (ctx) => LaundryScreen(),
         },
         onUnknownRoute: (settings) {
           return MaterialPageRoute(

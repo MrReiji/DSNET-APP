@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/TableCellsElements.dart';
+
 class GS_TableHeader extends StatelessWidget {
   const GS_TableHeader({super.key});
 
@@ -18,44 +20,11 @@ class GS_TableHeader extends StatelessWidget {
       children: [
         TableRow(
           children: <Widget>[
-            TableCell(
-              child: Container(
-                height: _height,
-                color: Colors.green.shade100,
-                child: const Center(
-                  child: Text(
-                    "Godzina",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-            TableCell(
-              child: Container(
-                height: _height,
-                color: Colors.green.shade100,
-                child: Center(
-                  child: Text(
-                    DateTime.now().toString().substring(0, 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
-            TableCell(
-              child: Container(
-                height: _height,
-                color: Colors.green.shade100,
-                child: Center(
-                  child: Text(
-                    DateTime(DateTime.now().year, DateTime.now().month,
-                            DateTime.now().day + 1)
-                        .toString()
-                        .substring(0, 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
+            HoursTableCell(height: _height),
+            DayTableCell(height: _height, daysFromToday: 0),
+            DayTableCell(
+              height: _height,
+              daysFromToday: 1,
             ),
           ],
         ),

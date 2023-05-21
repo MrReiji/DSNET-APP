@@ -1,9 +1,10 @@
 import 'package:dorm_gym/models/DataHandler.dart';
+import 'package:dorm_gym/models/TableCellsElements.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:dorm_gym/widgets/GymScreenWidgets/GS_TableHeader.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/GymScreenWidgets/GS_ReservationButton.dart';
+import '../widgets/ReservationButton.dart';
 
 class GymScreen extends StatefulWidget {
   const GymScreen({super.key});
@@ -21,7 +22,9 @@ class _GymScreenState extends State<GymScreen> {
 
   @override
   void initState() {
-    _reservationInfo = getReservationsInfo();
+    _reservationInfo = DataHandler.getReservationsInfo(
+        "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889",
+        reservationPlace.GYM);
     super.initState();
   }
 
@@ -67,61 +70,33 @@ class _GymScreenState extends State<GymScreen> {
                       32,
                       (index) => TableRow(
                         children: <Widget>[
-                          TableCell(
-                            child: Container(
+                          ContentTableCell(
                               height: _height,
-                              color: Colors.grey.shade200,
-                              child: Center(
-                                child: snapshot.connectionState ==
-                                        ConnectionState.waiting
-                                    ? const Text('Loading hours...')
-                                    : snapshot.hasError
-                                        ? Text('Error: ${snapshot.error}')
-                                        : Text(
-                                            '${snapshot.data![0 + index * 4]}\n${snapshot.data![1 + index * 4]}'),
-                              ),
-                            ),
+                              snapshot: snapshot,
+                              textWidget: Text(
+                                  '${snapshot.data?[0 + index * 4]}\n${snapshot.data?[1 + index * 4]}')),
+                          ContentTableCell(
+                            height: _height,
+                            snapshot: snapshot,
+                            textWidget:
+                                snapshot.data?[2 + index * 4] == "rezerwuj"
+                                    ? const ReservationButton(
+                                        url:
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                      )
+                                    : Text('${snapshot.data?[2 + index * 4]}'),
                           ),
-                          TableCell(
-                            child: Container(
-                              height: _height,
-                              color: Colors.grey.shade200,
-                              child: Center(
-                                child: snapshot.connectionState ==
-                                        ConnectionState.waiting
-                                    ? const Text('Loading reservation...')
-                                    : snapshot.hasError
-                                        ? Text('Error: ${snapshot.error}')
-                                        : snapshot.data![2 + index * 4] ==
-                                                "rezerwuj"
-                                            ? GS_ReservationButton(
-                                                buttonText: "Rezerwuj",
-                                                buttonColor: Colors.blue)
-                                            : Text(
-                                                snapshot.data![2 + index * 4]),
-                              ),
-                            ),
-                          ),
-                          TableCell(
-                            child: Container(
-                              height: _height,
-                              color: Colors.grey.shade200,
-                              child: Center(
-                                child: snapshot.connectionState ==
-                                        ConnectionState.waiting
-                                    ? const Text('Loading reservation...')
-                                    : snapshot.hasError
-                                        ? Text('Error: ${snapshot.error}')
-                                        : snapshot.data![3 + index * 4] ==
-                                                "rezerwuj"
-                                            ? GS_ReservationButton(
-                                                buttonText: "Rezerwuj",
-                                                buttonColor: Colors.blue)
-                                            : Text(
-                                                snapshot.data![3 + index * 4]),
-                              ),
-                            ),
-                          ),
+                          ContentTableCell(
+                            height: _height,
+                            snapshot: snapshot,
+                            textWidget:
+                                snapshot.data?[3 + index * 4] == "rezerwuj"
+                                    ? const ReservationButton(
+                                        url:
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                      )
+                                    : Text('${snapshot.data?[3 + index * 4]}'),
+                          )
                         ],
                       ),
                     ),

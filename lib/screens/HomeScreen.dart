@@ -52,7 +52,7 @@ Widget body(BuildContext context) {
         return HSCard(
           icon: cdms[index].icon,
           cardTitle: cdms[index].title,
-          routeName: GymScreen.routeName,
+          routeName: cdms[index].routeName,
         );
       });
 }

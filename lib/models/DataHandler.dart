@@ -1,56 +1,123 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Element;
 import 'package:html/dom.dart' hide Text;
 
 import 'ConnectionHandler.dart';
 
-Future<List<String>> getReservationsInfo() async {
-  try {
-    Document document = await ConnectionHandler.getData(
-        "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889");
-    var content = document
-        .querySelector('.table.reservation.general.table-sm.single')!
-        .children;
-    var slotContent = content[1].text.trim().split('\n');
+enum reservationPlace { GYM, LAUNDRY }
 
-    List<String> slotContentElemParts;
-    List<String> separated;
-    List<String> reservationInfo = [];
+class DataHandler {
+  static Future<List<String>> getReservationsInfo(
+      String url, reservationPlace resPlace) async {
+    try {
+      Document document = await ConnectionHandler.getData(url);
+      List<Element> content = document
+          .querySelector('.table.reservation.general.table-sm.single')!
+          .children;
+      List<String> slotContent = content[1].text.trim().split('\n');
 
-    for (String slotContentElem in slotContent) {
-      slotContentElemParts = slotContentElem.trim().split(' ');
+      List<String> slotContentElemParts;
+      List<String> separated;
+      List<String> reservationInfo = [];
 
-      slotContentElemParts.removeWhere((element) => element == '');
+      for (String slotContentElem in slotContent) {
+        slotContentElemParts = slotContentElem.trim().split(' ');
 
-      slotContentElemParts[slotContentElemParts.length - 1] =
-          slotContentElemParts[slotContentElemParts.length - 1]
-              .replaceAllMapped(RegExp(r'([a-zA-Z])(\d)'),
-                  (match) => '${match.group(1)} ${match.group(2)}');
+        slotContentElemParts.removeWhere((element) => element == '');
 
-      separated =
-          slotContentElemParts[slotContentElemParts.length - 1].split(" ");
+        slotContentElemParts[slotContentElemParts.length - 1] =
+            slotContentElemParts[slotContentElemParts.length - 1]
+                .replaceAllMapped(RegExp(r'(\p{L}+)(\d)', unicode: true),
+                    (match) => '${match.group(1)} ${match.group(2)}');
 
-      slotContentElemParts.removeLast();
+        separated =
+            slotContentElemParts[slotContentElemParts.length - 1].split(" ");
 
-      slotContentElemParts.add(separated[0]);
+        slotContentElemParts.removeLast();
 
-      if (slotContentElemParts.length == 1) {
-        reservationInfo.add(separated[0]);
-      } else if (slotContentElemParts.length == 4) {
-        reservationInfo
-            .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
-        reservationInfo
-            .add(slotContentElemParts[2] + " " + slotContentElemParts[3]);
-      } else if (slotContentElemParts.length == 3) {
-        reservationInfo
-            .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
-        reservationInfo.add(slotContentElemParts[2]);
+        slotContentElemParts.add(separated[0]);
+
+//------------------------------------------------------------------------------------
+
+        if (resPlace == reservationPlace.GYM) {
+          switch (slotContentElemParts.length) {
+            //When there is only a hour
+            case 1:
+              reservationInfo.add(slotContentElemParts[0]);
+              break;
+            //When there are 2 book option available
+            case 2:
+              reservationInfo.addAll(slotContentElemParts);
+              break;
+            //When there is 1 book option available
+            case 3:
+              if (slotContentElemParts[0] == "rezerwuj") {
+                reservationInfo.add(slotContentElemParts[0]);
+                reservationInfo.add(
+                    slotContentElemParts[1] + " " + slotContentElemParts[2]);
+              } else {
+                reservationInfo.add(
+                    slotContentElemParts[0] + " " + slotContentElemParts[1]);
+                reservationInfo.add(slotContentElemParts[2]);
+              }
+              break;
+            //When there are 2 reservations or not available ones
+            case 4:
+              reservationInfo
+                  .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
+              reservationInfo
+                  .add(slotContentElemParts[2] + " " + slotContentElemParts[3]);
+              break;
+          }
+          //When there are 2 elements, second one is the start of a new slot
+          if (separated.length == 2) {
+            reservationInfo.add(separated[1]);
+          }
+        }
+//------------------------------------------------------------------------------------
+
+        else if (resPlace == reservationPlace.LAUNDRY) {
+          print(slotContentElemParts);
+          if (slotContentElemParts.length == 1) {
+            reservationInfo.add(slotContentElemParts[0]);
+          } else if (slotContentElemParts.length == 4) {
+            reservationInfo.addAll(slotContentElemParts);
+          } else {
+            for (String elem in slotContentElemParts) {
+              if (elem == "rezerwuj") {
+                reservationInfo.add(elem);
+              } else if ((RegExp(r'^[0-9]+A?$').hasMatch(elem)) ||
+                  elem == "Za" ||
+                  elem == "Termin" ||
+                  elem == "Limit") {
+                reservationInfo.add(elem +
+                    " " +
+                    slotContentElemParts[
+                        slotContentElemParts.indexOf(elem) + 1]);
+              } else if (elem == "Twoja") {
+                reservationInfo.add(elem +
+                    " " +
+                    slotContentElemParts[
+                        slotContentElemParts.indexOf(elem) + 1]);
+                if (slotContentElemParts[
+                        slotContentElemParts.indexOf(elem) + 2] ==
+                    "usuń") {
+                  reservationInfo[reservationInfo.length - 1] =
+                      reservationInfo[reservationInfo.length - 1] +
+                          "\n" +
+                          slotContentElemParts[
+                              slotContentElemParts.indexOf(elem) + 2];
+                }
+              } else {
+                continue;
+              }
+            }
+          }
+        }
       }
-      if (separated.length > 1) {
-        reservationInfo.add(separated[1]);
-      }
+      print(reservationInfo);
+      return reservationInfo;
+    } catch (error) {
+      rethrow;
     }
-    return reservationInfo;
-  } catch (error) {
-    rethrow;
   }
 }

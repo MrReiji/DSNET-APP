@@ -5,6 +5,7 @@ class CDE {
   final IconData icon;
   final String title;
   final List<String> submenus;
+  final String routeName;
 
-  CDE(this.icon, this.title, this.submenus);
+  CDE(this.icon, this.title, this.submenus, this.routeName);
 }
