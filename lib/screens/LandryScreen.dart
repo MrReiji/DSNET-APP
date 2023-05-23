@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/TableCellsElements.dart';
 import '../widgets/ComplexDrawer.dart';
-import '../widgets/ReservationButton.dart';
+import '../widgets/ReservationButtons.dart';
 
 class LaundryScreen extends StatefulWidget {
   const LaundryScreen({super.key});
@@ -23,13 +23,21 @@ class _LaundryScreenState extends State<LaundryScreen> {
   void initState() {
     _reservationInfo =
         DataHandler.getReservationsInfo(url, reservationPlace.LAUNDRY);
+
     super.initState();
+  }
+
+  void refreshScreen() {
+    setState(() {
+      _reservationInfo =
+          DataHandler.getReservationsInfo(url, reservationPlace.LAUNDRY);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final screenName = ModalRoute.of(context)!.settings.arguments as String;
-    double _height = MediaQuery.of(context).size.height / 9.5;
+    double _height = MediaQuery.of(context).size.height / 9;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,72 +81,145 @@ class _LaundryScreenState extends State<LaundryScreen> {
                       (index) => TableRow(
                         children: <Widget>[
                           ContentTableCell(
-                              height: _height,
-                              snapshot: snapshot,
-                              textWidget: index == 0
-                                  ? Text(
-                                      '${snapshot.data?[0]}\n${snapshot.data?[1]}')
-                                  : Text(
-                                      '${snapshot.data?[1 + (index - 1) * 5]}\n${snapshot.data?[6 + (index - 1) * 5]}')),
+                            height: _height,
+                            snapshot: snapshot,
+                            textWidget: index == 0
+                                ? Text(
+                                    '${snapshot.data?[0]}\n${snapshot.data?[1]}',
+                                    textAlign: TextAlign.center,
+                                  )
+                                : Text(
+                                    '${snapshot.data?[1 + (index - 1) * 5]}\n${snapshot.data?[6 + (index - 1) * 5]}',
+                                    textAlign: TextAlign.center,
+                                  ),
+                          ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
                             textWidget: snapshot.data?[2 + index * 5] ==
                                     "rezerwuj"
-                                ? const ReservationButton(
-                                    url:
-                                        'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                ? ReservationButton(
+                                    url: url,
+                                    daysFromToday: 0,
+                                    rowNumber: index,
+                                    refreshScreen: refreshScreen,
                                   )
                                 : snapshot.data?[2 + index * 5] ==
                                         "Twoja rezerwacja"
-                                    ? const Text(
-                                        'Twoja rezerwacja',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      )
-                                    : Text('${snapshot.data?[2 + index * 5]}'),
+                                    ? const ReservationText()
+                                    : snapshot.data?[2 + index * 5] ==
+                                            "Twoja rezerwacja usuń"
+                                        ? Column(
+                                            children: [
+                                              const ReservationText(),
+                                              RemoveReservationButton(
+                                                  url: url,
+                                                  refreshScreen: refreshScreen)
+                                            ],
+                                          )
+                                        : Text(
+                                            '${snapshot.data?[2 + index * 5]}',
+                                            textAlign: TextAlign.center,
+                                          ),
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
                             textWidget:
                                 snapshot.data?[3 + index * 5] == "rezerwuj"
-                                    ? const ReservationButton(
+                                    ? ReservationButton(
                                         url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
+                                        daysFromToday: 1,
+                                        rowNumber: index,
+                                        refreshScreen: refreshScreen,
                                       )
-                                    : Text('${snapshot.data?[3 + index * 5]}'),
+                                    : snapshot.data?[3 + index * 5] ==
+                                            "Twoja rezerwacja"
+                                        ? const ReservationText()
+                                        : snapshot.data?[3 + index * 5] ==
+                                                "Twoja rezerwacja usuń"
+                                            ? Center(
+                                                child: Column(
+                                                  children: [
+                                                    const ReservationText(),
+                                                    RemoveReservationButton(
+                                                        url: url,
+                                                        refreshScreen:
+                                                            refreshScreen)
+                                                  ],
+                                                ),
+                                              )
+                                            : Text(
+                                                '${snapshot.data?[3 + index * 5]}',
+                                                textAlign: TextAlign.center,
+                                              ),
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget: snapshot.data?[4 + index * 5] ==
-                                    "rezerwuj"
-                                ? const ReservationButton(
-                                    url:
-                                        'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
-                                  )
-                                : snapshot.data?[4 + index * 5] ==
-                                        "Twoja rezerwacja"
-                                    ? Text(
-                                        '${snapshot.data?[4 + index * 5]}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                            textWidget:
+                                snapshot.data?[4 + index * 5] == "rezerwuj"
+                                    ? ReservationButton(
+                                        url:
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
+                                        daysFromToday: 2,
+                                        rowNumber: index,
+                                        refreshScreen: refreshScreen,
                                       )
-                                    : Text('${snapshot.data?[4 + index * 5]}'),
+                                    : snapshot.data?[4 + index * 5] ==
+                                            "Twoja rezerwacja"
+                                        ? const ReservationText()
+                                        : snapshot.data?[4 + index * 5] ==
+                                                "Twoja rezerwacja usuń"
+                                            ? Center(
+                                                child: Column(
+                                                  children: [
+                                                    const ReservationText(),
+                                                    RemoveReservationButton(
+                                                        url: url,
+                                                        refreshScreen:
+                                                            refreshScreen)
+                                                  ],
+                                                ),
+                                              )
+                                            : Text(
+                                                '${snapshot.data?[4 + index * 5]}',
+                                                textAlign: TextAlign.center,
+                                              ),
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
                             textWidget:
                                 snapshot.data?[5 + index * 5] == "rezerwuj"
-                                    ? const ReservationButton(
+                                    ? ReservationButton(
                                         url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
+                                        daysFromToday: 3,
+                                        rowNumber: index,
+                                        refreshScreen: refreshScreen,
                                       )
-                                    : Text('${snapshot.data?[5 + index * 5]}'),
+                                    : snapshot.data?[5 + index * 5] ==
+                                            "Twoja rezerwacja"
+                                        ? const ReservationText()
+                                        : snapshot.data?[5 + index * 5] ==
+                                                "Twoja rezerwacja usuń"
+                                            ? Center(
+                                                child: Column(
+                                                  children: [
+                                                    const ReservationText(),
+                                                    RemoveReservationButton(
+                                                        url: url,
+                                                        refreshScreen:
+                                                            refreshScreen)
+                                                  ],
+                                                ),
+                                              )
+                                            : Text(
+                                                '${snapshot.data?[5 + index * 5]}',
+                                                textAlign: TextAlign.center,
+                                              ),
                           )
                         ],
                       ),

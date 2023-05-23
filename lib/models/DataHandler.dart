@@ -44,7 +44,7 @@ class DataHandler {
             case 1:
               reservationInfo.add(slotContentElemParts[0]);
               break;
-            //When there are 2 book option available
+            //When there are 2 book options available
             case 2:
               reservationInfo.addAll(slotContentElemParts);
               break;
@@ -60,7 +60,7 @@ class DataHandler {
                 reservationInfo.add(slotContentElemParts[2]);
               }
               break;
-            //When there are 2 reservations or not available ones
+            //When there are 2 book options or not available ones
             case 4:
               reservationInfo
                   .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
@@ -76,16 +76,23 @@ class DataHandler {
 //------------------------------------------------------------------------------------
 
         else if (resPlace == reservationPlace.LAUNDRY) {
-          print(slotContentElemParts);
+          //When there is only a hour
           if (slotContentElemParts.length == 1) {
             reservationInfo.add(slotContentElemParts[0]);
-          } else if (slotContentElemParts.length == 4) {
+          }
+          //When there are 4 book options available
+          else if (slotContentElemParts.length == 4) {
             reservationInfo.addAll(slotContentElemParts);
-          } else {
+          }
+          //When there are situations, when at least one slot is booked
+          else {
             for (String elem in slotContentElemParts) {
+              //When specific slot is not booked
               if (elem == "rezerwuj") {
                 reservationInfo.add(elem);
-              } else if ((RegExp(r'^[0-9]+A?$').hasMatch(elem)) ||
+              }
+              //When someone booked a slot
+              else if ((RegExp(r'^[0-9]+A?$').hasMatch(elem)) ||
                   elem == "Za" ||
                   elem == "Termin" ||
                   elem == "Limit") {
@@ -93,17 +100,20 @@ class DataHandler {
                     " " +
                     slotContentElemParts[
                         slotContentElemParts.indexOf(elem) + 1]);
-              } else if (elem == "Twoja") {
+              }
+              //When you booked a slot
+              else if (elem == "Twoja") {
                 reservationInfo.add(elem +
                     " " +
                     slotContentElemParts[
                         slotContentElemParts.indexOf(elem) + 1]);
+                //When you did it earlier
                 if (slotContentElemParts[
                         slotContentElemParts.indexOf(elem) + 2] ==
                     "usuń") {
                   reservationInfo[reservationInfo.length - 1] =
                       reservationInfo[reservationInfo.length - 1] +
-                          "\n" +
+                          " " +
                           slotContentElemParts[
                               slotContentElemParts.indexOf(elem) + 2];
                 }
@@ -114,8 +124,22 @@ class DataHandler {
           }
         }
       }
-      print(reservationInfo);
       return reservationInfo;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<List<String>> getFormActionList(String url) async {
+    try {
+      List<String> formActions = [];
+      Document document = await ConnectionHandler.getData(url);
+      List<Element> buttons = document.querySelectorAll('[formaction]');
+      for (Element button in buttons) {
+        String formAction = button.attributes['formaction'] as String;
+        formActions.add(formAction);
+      }
+      return formActions;
     } catch (error) {
       rethrow;
     }

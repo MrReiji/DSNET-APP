@@ -4,7 +4,7 @@ import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:dorm_gym/widgets/GymScreenWidgets/GS_TableHeader.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/ReservationButton.dart';
+import '../widgets/ReservationButtons.dart';
 
 class GymScreen extends StatefulWidget {
   const GymScreen({super.key});
@@ -78,22 +78,29 @@ class _GymScreenState extends State<GymScreen> {
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget:
-                                snapshot.data?[2 + index * 4] == "rezerwuj"
-                                    ? const ReservationButton(
-                                        url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
-                                      )
-                                    : Text('${snapshot.data?[2 + index * 4]}'),
+                            textWidget: snapshot.data?[2 + index * 4] ==
+                                    "rezerwuj"
+                                //TODO Work on ReservationButtons on this screen
+                                ? ReservationButton(
+                                    url:
+                                        'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889',
+                                    daysFromToday: 0,
+                                    rowNumber: 0,
+                                    refreshScreen: () => {},
+                                  )
+                                : Text('${snapshot.data?[2 + index * 4]}'),
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
                             textWidget:
                                 snapshot.data?[3 + index * 4] == "rezerwuj"
-                                    ? const ReservationButton(
+                                    ? ReservationButton(
                                         url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294/2334/2023-05-22/1e858b89',
+                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889',
+                                        daysFromToday: 0,
+                                        rowNumber: 0,
+                                        refreshScreen: () => {},
                                       )
                                     : Text('${snapshot.data?[3 + index * 4]}'),
                           )

@@ -84,3 +84,18 @@ class ContentTableCell extends StatelessWidget {
     );
   }
 }
+
+class ReservationText extends StatelessWidget {
+  const ReservationText({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Twoja rezerwacja',
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      textAlign: TextAlign.center,
+    );
+  }
+}

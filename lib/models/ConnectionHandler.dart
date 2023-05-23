@@ -75,14 +75,25 @@ class ConnectionHandler {
 
   static Future<void> makeReservation(String url) async {
     final String _url = url;
-
-    final response = await dio.post(url,
-        data: {'form': 'single'},
-        options: Options(
-          headers: {
-            'cookie': cookie,
-          },
-        ));
-    //print(response);
+    try {
+      final response = await dio.post(url,
+          data: {'form': 'single'},
+          options: Options(
+            headers: {
+              'cookie': cookie,
+            },
+          ));
+    } catch (e) {
+      if (e is DioError) {
+        final dioError = e as DioError;
+        if (dioError.response != null) {
+          if (dioError.response!.statusCode == 302) {
+            print("Your booking request has been sent");
+          } else {
+            rethrow;
+          }
+        }
+      }
+    }
   }
 }
