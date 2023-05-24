@@ -1,3 +1,4 @@
+import 'package:dorm_gym/screens/LandryScreen.dart';
 import 'package:flutter/material.dart';
 
 class HSCard extends StatelessWidget {

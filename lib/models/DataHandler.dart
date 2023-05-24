@@ -3,11 +3,11 @@ import 'package:html/dom.dart' hide Text;
 
 import 'ConnectionHandler.dart';
 
-enum reservationPlace { GYM, LAUNDRY }
+enum ReservationPlace { GYM, LAUNDRY }
 
 class DataHandler {
   static Future<List<String>> getReservationsInfo(
-      String url, reservationPlace resPlace) async {
+      String url, ReservationPlace resPlace) async {
     try {
       Document document = await ConnectionHandler.getData(url);
       List<Element> content = document
@@ -38,7 +38,7 @@ class DataHandler {
 
 //------------------------------------------------------------------------------------
 
-        if (resPlace == reservationPlace.GYM) {
+        if (resPlace == ReservationPlace.GYM) {
           switch (slotContentElemParts.length) {
             //When there is only a hour
             case 1:
@@ -60,12 +60,50 @@ class DataHandler {
                 reservationInfo.add(slotContentElemParts[2]);
               }
               break;
-            //When there are 2 book options or not available ones
+            //When there are 2 booked slots or not available ones or your booked slot
             case 4:
-              reservationInfo
-                  .add(slotContentElemParts[0] + " " + slotContentElemParts[1]);
-              reservationInfo
-                  .add(slotContentElemParts[2] + " " + slotContentElemParts[3]);
+              //When there are 2 booked slots or not available ones
+              if (slotContentElemParts[0] != "rezerwuj" &&
+                  slotContentElemParts[0] != "Twoja") {
+                reservationInfo.add(
+                    slotContentElemParts[0] + " " + slotContentElemParts[1]);
+                reservationInfo.add(
+                    slotContentElemParts[2] + " " + slotContentElemParts[3]);
+                //When there is one book option and your booked slot
+              } else if (slotContentElemParts[0] == "rezerwuj") {
+                reservationInfo.add(slotContentElemParts[0]);
+                reservationInfo.add(slotContentElemParts[1] +
+                    " " +
+                    slotContentElemParts[2] +
+                    slotContentElemParts[3]);
+                //When there is one booked or not available option and your booked slot
+              } else {
+                reservationInfo.add(
+                    slotContentElemParts[0] + " " + slotContentElemParts[1]);
+                reservationInfo.add(
+                    slotContentElemParts[2] + " " + slotContentElemParts[3]);
+              }
+              break;
+            case 5:
+              //When there is one booked or not available option and your fresh booked slot
+              if (slotContentElemParts[0] != "Twoja") {
+                reservationInfo.add(
+                    slotContentElemParts[0] + " " + slotContentElemParts[1]);
+                reservationInfo.add(slotContentElemParts[2] +
+                    " " +
+                    slotContentElemParts[3] +
+                    " " +
+                    slotContentElemParts[4]);
+              } else {
+                reservationInfo.add(slotContentElemParts[0] +
+                    " " +
+                    slotContentElemParts[1] +
+                    " " +
+                    slotContentElemParts[2]);
+                reservationInfo.add(
+                    slotContentElemParts[3] + " " + slotContentElemParts[4]);
+              }
+
               break;
           }
           //When there are 2 elements, second one is the start of a new slot
@@ -75,7 +113,7 @@ class DataHandler {
         }
 //------------------------------------------------------------------------------------
 
-        else if (resPlace == reservationPlace.LAUNDRY) {
+        else if (resPlace == ReservationPlace.LAUNDRY) {
           //When there is only a hour
           if (slotContentElemParts.length == 1) {
             reservationInfo.add(slotContentElemParts[0]);
@@ -130,15 +168,22 @@ class DataHandler {
     }
   }
 
-  static Future<List<String>> getFormActionList(String url) async {
+  static Future<List<String>> getFormActionList(
+      String url, bool toDelete) async {
     try {
       List<String> formActions = [];
       Document document = await ConnectionHandler.getData(url);
       List<Element> buttons = document.querySelectorAll('[formaction]');
       for (Element button in buttons) {
         String formAction = button.attributes['formaction'] as String;
-        formActions.add(formAction);
+        if ((toDelete && formAction.contains('delete')) ||
+            (!toDelete && !formAction.contains('delete'))) {
+          formActions.add(formAction);
+        } else {
+          continue;
+        }
       }
+      print(formActions);
       return formActions;
     } catch (error) {
       rethrow;

@@ -14,7 +14,7 @@ showLoaderDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        content: new Row(
+        content: Row(
           children: [
             CircularProgressIndicator(),
             Container(
@@ -63,6 +63,8 @@ class ConnectionHandler {
 
       dom.Document mainPageLoggedIn =
           await getData("https://panel.dsnet.agh.edu.pl");
+
+      Navigator.pop(context);
 
       return mainPageLoggedIn
           .querySelector('#tour_welcome')!

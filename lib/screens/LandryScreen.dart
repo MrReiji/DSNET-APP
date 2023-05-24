@@ -4,25 +4,32 @@ import 'package:flutter/material.dart';
 
 import '../models/TableCellsElements.dart';
 import '../widgets/ComplexDrawer.dart';
-import '../widgets/ReservationButtons.dart';
 
 class LaundryScreen extends StatefulWidget {
-  const LaundryScreen({super.key});
+  const LaundryScreen(
+      {super.key, required this.url, required this.washerNumber});
 
-  static const routeName = '/laundry';
+  static String routeName = '/laundry';
+  final String url;
+  final int washerNumber;
 
   @override
   State<LaundryScreen> createState() => _LaundryScreenState();
 }
 
 class _LaundryScreenState extends State<LaundryScreen> {
-  String url = "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294";
+  //String url = "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294";
   late Future<List<String>> _reservationInfo;
-
+  late String url;
+  late int washerNumber;
+  late String routeName;
   @override
   void initState() {
+    url = widget.url;
     _reservationInfo =
-        DataHandler.getReservationsInfo(url, reservationPlace.LAUNDRY);
+        DataHandler.getReservationsInfo(url, ReservationPlace.LAUNDRY);
+    washerNumber = widget.washerNumber;
+    routeName = LaundryScreen.routeName;
 
     super.initState();
   }
@@ -30,13 +37,12 @@ class _LaundryScreenState extends State<LaundryScreen> {
   void refreshScreen() {
     setState(() {
       _reservationInfo =
-          DataHandler.getReservationsInfo(url, reservationPlace.LAUNDRY);
+          DataHandler.getReservationsInfo(url, ReservationPlace.LAUNDRY);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenName = ModalRoute.of(context)!.settings.arguments as String;
     double _height = MediaQuery.of(context).size.height / 9;
 
     return Scaffold(
@@ -46,9 +52,52 @@ class _LaundryScreenState extends State<LaundryScreen> {
           color: Theme.of(context).primaryColor,
         ),
         title: Text(
-          screenName,
+          "Pralka $washerNumber",
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              if (washerNumber != 1) {
+                washerNumber--;
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LaundryScreen(
+                      url:
+                          'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/229${3 + washerNumber}',
+                      washerNumber: washerNumber,
+                    ),
+                  ),
+                );
+              }
+            },
+            splashRadius: 25,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () {
+                if (washerNumber != 5) {
+                  washerNumber++;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LaundryScreen(
+                        url:
+                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/229${3 + washerNumber}',
+                        washerNumber: washerNumber,
+                      ),
+                    ),
+                  );
+                }
+              },
+              splashRadius: 25,
+            ),
+          ),
+        ],
       ),
       drawer: ComplexDrawer(),
       body: Column(
@@ -80,7 +129,7 @@ class _LaundryScreenState extends State<LaundryScreen> {
                       8,
                       (index) => TableRow(
                         children: <Widget>[
-                          ContentTableCell(
+                          ContentHourTableCell(
                             height: _height,
                             snapshot: snapshot,
                             textWidget: index == 0
@@ -96,130 +145,46 @@ class _LaundryScreenState extends State<LaundryScreen> {
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget: snapshot.data?[2 + index * 5] ==
-                                    "rezerwuj"
-                                ? ReservationButton(
-                                    url: url,
-                                    daysFromToday: 0,
-                                    rowNumber: index,
-                                    refreshScreen: refreshScreen,
-                                  )
-                                : snapshot.data?[2 + index * 5] ==
-                                        "Twoja rezerwacja"
-                                    ? const ReservationText()
-                                    : snapshot.data?[2 + index * 5] ==
-                                            "Twoja rezerwacja usuń"
-                                        ? Column(
-                                            children: [
-                                              const ReservationText(),
-                                              RemoveReservationButton(
-                                                  url: url,
-                                                  refreshScreen: refreshScreen)
-                                            ],
-                                          )
-                                        : Text(
-                                            '${snapshot.data?[2 + index * 5]}',
-                                            textAlign: TextAlign.center,
-                                          ),
+                            index: index,
+                            numOfUrlPlace: 2327,
+                            indexInReservationInfo: 2,
+                            multiplier: 5,
+                            daysFromToday: 0,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget:
-                                snapshot.data?[3 + index * 5] == "rezerwuj"
-                                    ? ReservationButton(
-                                        url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
-                                        daysFromToday: 1,
-                                        rowNumber: index,
-                                        refreshScreen: refreshScreen,
-                                      )
-                                    : snapshot.data?[3 + index * 5] ==
-                                            "Twoja rezerwacja"
-                                        ? const ReservationText()
-                                        : snapshot.data?[3 + index * 5] ==
-                                                "Twoja rezerwacja usuń"
-                                            ? Center(
-                                                child: Column(
-                                                  children: [
-                                                    const ReservationText(),
-                                                    RemoveReservationButton(
-                                                        url: url,
-                                                        refreshScreen:
-                                                            refreshScreen)
-                                                  ],
-                                                ),
-                                              )
-                                            : Text(
-                                                '${snapshot.data?[3 + index * 5]}',
-                                                textAlign: TextAlign.center,
-                                              ),
+                            index: index,
+                            numOfUrlPlace: 2327,
+                            indexInReservationInfo: 3,
+                            multiplier: 5,
+                            daysFromToday: 1,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget:
-                                snapshot.data?[4 + index * 5] == "rezerwuj"
-                                    ? ReservationButton(
-                                        url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
-                                        daysFromToday: 2,
-                                        rowNumber: index,
-                                        refreshScreen: refreshScreen,
-                                      )
-                                    : snapshot.data?[4 + index * 5] ==
-                                            "Twoja rezerwacja"
-                                        ? const ReservationText()
-                                        : snapshot.data?[4 + index * 5] ==
-                                                "Twoja rezerwacja usuń"
-                                            ? Center(
-                                                child: Column(
-                                                  children: [
-                                                    const ReservationText(),
-                                                    RemoveReservationButton(
-                                                        url: url,
-                                                        refreshScreen:
-                                                            refreshScreen)
-                                                  ],
-                                                ),
-                                              )
-                                            : Text(
-                                                '${snapshot.data?[4 + index * 5]}',
-                                                textAlign: TextAlign.center,
-                                              ),
+                            index: index,
+                            numOfUrlPlace: 2327,
+                            indexInReservationInfo: 4,
+                            multiplier: 5,
+                            daysFromToday: 2,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget:
-                                snapshot.data?[5 + index * 5] == "rezerwuj"
-                                    ? ReservationButton(
-                                        url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2294',
-                                        daysFromToday: 3,
-                                        rowNumber: index,
-                                        refreshScreen: refreshScreen,
-                                      )
-                                    : snapshot.data?[5 + index * 5] ==
-                                            "Twoja rezerwacja"
-                                        ? const ReservationText()
-                                        : snapshot.data?[5 + index * 5] ==
-                                                "Twoja rezerwacja usuń"
-                                            ? Center(
-                                                child: Column(
-                                                  children: [
-                                                    const ReservationText(),
-                                                    RemoveReservationButton(
-                                                        url: url,
-                                                        refreshScreen:
-                                                            refreshScreen)
-                                                  ],
-                                                ),
-                                              )
-                                            : Text(
-                                                '${snapshot.data?[5 + index * 5]}',
-                                                textAlign: TextAlign.center,
-                                              ),
+                            index: index,
+                            numOfUrlPlace: 2327,
+                            indexInReservationInfo: 5,
+                            multiplier: 5,
+                            daysFromToday: 3,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           )
                         ],
                       ),

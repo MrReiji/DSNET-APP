@@ -16,22 +16,27 @@ class GymScreen extends StatefulWidget {
 }
 
 class _GymScreenState extends State<GymScreen> {
-  _GymScreenState();
-
+  String url = "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889";
   late Future<List<String>> _reservationInfo;
 
   @override
   void initState() {
-    _reservationInfo = DataHandler.getReservationsInfo(
-        "https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889",
-        reservationPlace.GYM);
+    _reservationInfo =
+        DataHandler.getReservationsInfo(url, ReservationPlace.GYM);
     super.initState();
+  }
+
+  void refreshScreen() {
+    setState(() {
+      _reservationInfo =
+          DataHandler.getReservationsInfo(url, ReservationPlace.GYM);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final screenName = ModalRoute.of(context)!.settings.arguments as String;
-    double _height = MediaQuery.of(context).size.height / 18;
+    double _height = MediaQuery.of(context).size.height / 11.5;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +75,7 @@ class _GymScreenState extends State<GymScreen> {
                       32,
                       (index) => TableRow(
                         children: <Widget>[
-                          ContentTableCell(
+                          ContentHourTableCell(
                               height: _height,
                               snapshot: snapshot,
                               textWidget: Text(
@@ -78,31 +83,24 @@ class _GymScreenState extends State<GymScreen> {
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget: snapshot.data?[2 + index * 4] ==
-                                    "rezerwuj"
-                                //TODO Work on ReservationButtons on this screen
-                                ? ReservationButton(
-                                    url:
-                                        'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889',
-                                    daysFromToday: 0,
-                                    rowNumber: 0,
-                                    refreshScreen: () => {},
-                                  )
-                                : Text('${snapshot.data?[2 + index * 4]}'),
+                            index: index,
+                            numOfUrlPlace: 3587,
+                            indexInReservationInfo: 2,
+                            multiplier: 4,
+                            daysFromToday: 0,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           ),
                           ContentTableCell(
                             height: _height,
                             snapshot: snapshot,
-                            textWidget:
-                                snapshot.data?[3 + index * 4] == "rezerwuj"
-                                    ? ReservationButton(
-                                        url:
-                                            'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/2889',
-                                        daysFromToday: 0,
-                                        rowNumber: 0,
-                                        refreshScreen: () => {},
-                                      )
-                                    : Text('${snapshot.data?[3 + index * 4]}'),
+                            index: index,
+                            numOfUrlPlace: 3587,
+                            indexInReservationInfo: 3,
+                            multiplier: 4,
+                            daysFromToday: 1,
+                            url: url,
+                            refreshScreen: refreshScreen,
                           )
                         ],
                       ),

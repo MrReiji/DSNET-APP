@@ -7,6 +7,7 @@ import '../../models/ComplexDrawerElement.dart';
 import '../cdms.dart';
 import '../models/MyColors.dart';
 import '../screens/HomeScreen.dart';
+import '../screens/LandryScreen.dart';
 
 class ComplexDrawer extends StatefulWidget {
   const ComplexDrawer({Key? key}) : super(key: key);
@@ -20,7 +21,21 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
 
   void selectCategory(
       BuildContext context, String routeName, String screenTitle) {
-    Navigator.of(context).pushNamed(routeName, arguments: screenTitle);
+    if (routeName == '/laundry') {
+      int washerNumber = int.parse(screenTitle[screenTitle.length - 1]);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LaundryScreen(
+            url:
+                'https://panel.dsnet.agh.edu.pl/reserv/rezerwuj/229${3 + washerNumber}',
+            washerNumber: washerNumber,
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).pushNamed(routeName, arguments: screenTitle);
+    }
   }
 
   void returnToHomeScreen(BuildContext context) {
@@ -60,8 +75,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                         onTap: () {
                           setState(() {
                             selectedIndex = selected ? index : -1;
-                            selectCategory(
-                                context, GymScreen.routeName, cdm.title);
+                            selectCategory(context, cdm.routeName, cdm.title);
                           });
                         },
                       )
@@ -79,7 +93,7 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
                           style: TextStyle(color: Colors.white),
                         ),
                         children: cdm.submenus.map((subMenu) {
-                          return sMenuButton(subMenu);
+                          return sMenuButton(subMenu, cdm.routeName);
                         }).toList(),
                       );
               },
@@ -117,10 +131,10 @@ class _ComplexDrawerState extends State<ComplexDrawer> {
     );
   }
 
-  Widget sMenuButton(String subMenu) {
+  Widget sMenuButton(String subMenu, String routeName) {
     return InkWell(
       onTap: () {
-        selectCategory(context, GymScreen.routeName, subMenu);
+        selectCategory(context, routeName, subMenu);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

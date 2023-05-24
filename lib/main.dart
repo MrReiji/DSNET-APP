@@ -1,3 +1,4 @@
+import 'package:dorm_gym/routes.dart';
 import 'package:dorm_gym/screens/LandryScreen.dart';
 import 'package:dorm_gym/widgets/ComplexDrawer.dart';
 import 'package:dorm_gym/screens/GymScreen.dart';
@@ -24,11 +25,7 @@ class MyApp extends StatelessWidget {
           canvasColor: MyColors.complexDrawerCanvasColor,
         ),
         home: LoginScreen(),
-        routes: {
-          HomeScreen.routeName: (ctx) => HomeScreen(),
-          GymScreen.routeName: (ctx) => GymScreen(),
-          LaundryScreen.routeName: (ctx) => LaundryScreen(),
-        },
+        routes: routes,
         onUnknownRoute: (settings) {
           return MaterialPageRoute(
             builder: (ctx) => LoginScreen(),

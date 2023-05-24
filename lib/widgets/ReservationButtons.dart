@@ -8,16 +8,18 @@ class ReservationButton extends StatelessWidget {
       required this.url,
       required this.daysFromToday,
       required this.rowNumber,
+      required this.numOfUrlPlace,
       required this.refreshScreen});
 
   final String url;
   final int daysFromToday;
   final VoidCallback refreshScreen;
   final int rowNumber;
+  final int numOfUrlPlace;
 
   @override
   Widget build(BuildContext context) {
-    int rNum = 2327 + rowNumber;
+    int rNum = numOfUrlPlace + rowNumber;
 
     return ElevatedButton(
       onPressed: () async {
@@ -26,7 +28,8 @@ class ReservationButton extends StatelessWidget {
                   DateTime.now().day + daysFromToday)
               .toString()
               .substring(0, 10);
-          List<String> formActions = await DataHandler.getFormActionList(url);
+          List<String> formActions =
+              await DataHandler.getFormActionList(url, false);
           String reservationUrl = 'https://panel.dsnet.agh.edu.pl' +
               formActions.firstWhere((element) =>
                   element.contains(date) && element.contains(rNum.toString()));
@@ -53,8 +56,11 @@ class ReservationButton extends StatelessWidget {
 }
 
 class RemoveReservationButton extends StatelessWidget {
-  const RemoveReservationButton(
-      {super.key, required this.url, required this.refreshScreen});
+  const RemoveReservationButton({
+    super.key,
+    required this.url,
+    required this.refreshScreen,
+  });
 
   final String url;
   final VoidCallback refreshScreen;
@@ -64,7 +70,9 @@ class RemoveReservationButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         try {
-          List<String> formActions = await DataHandler.getFormActionList(url);
+          List<String> formActions =
+              await DataHandler.getFormActionList(url, true);
+
           String reservationUrl =
               'https://panel.dsnet.agh.edu.pl' + formActions.last;
           ConnectionHandler.makeReservation(reservationUrl);
