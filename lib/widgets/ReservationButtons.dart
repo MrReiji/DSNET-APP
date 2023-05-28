@@ -23,21 +23,27 @@ class ReservationButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () async {
-        try {
-          String date = DateTime(DateTime.now().year, DateTime.now().month,
-                  DateTime.now().day + daysFromToday)
-              .toString()
-              .substring(0, 10);
-          List<String> formActions =
-              await DataHandler.getFormActionList(url, false);
-          String reservationUrl = 'https://panel.dsnet.agh.edu.pl' +
-              formActions.firstWhere((element) =>
-                  element.contains(date) && element.contains(rNum.toString()));
-          ConnectionHandler.makeReservation(reservationUrl);
-          refreshScreen();
-        } catch (error) {
-          rethrow;
-        }
+        // try {
+        String date = DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day + daysFromToday)
+            .toString()
+            .substring(0, 10);
+        List<String> formActions =
+            await DataHandler.getFormActionList(url, false);
+        print(formActions);
+        print(date);
+        print(rNum.toString());
+        print(formActions.contains(date));
+        print(formActions.contains(rNum.toString()));
+        String reservationUrl = 'https://panel.dsnet.agh.edu.pl' +
+            formActions.firstWhere((element) =>
+                element.contains(date) && element.contains(rNum.toString()));
+        print(reservationUrl);
+        ConnectionHandler.makeReservation(reservationUrl);
+        refreshScreen();
+        // } catch (error) {
+        //   rethrow;
+        // }
       },
       style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,

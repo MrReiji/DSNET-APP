@@ -183,7 +183,6 @@ class DataHandler {
           continue;
         }
       }
-      print(formActions);
       return formActions;
     } catch (error) {
       rethrow;
