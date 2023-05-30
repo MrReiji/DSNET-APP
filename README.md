@@ -1,3 +1,3 @@
-# Dormitory Gym App
+# Dormitory App
 
-An application created in Flutter that will allow you to book a gym in the dormitory
+An application of DSNET Panel created in Flutter.
